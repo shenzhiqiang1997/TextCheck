@@ -1,5 +1,6 @@
 package priv.shen.TextCheck;
 
+
 import java.io.IOException;
 import java.util.List;
 
@@ -21,9 +22,14 @@ public class TextCheck {
 			List<RuleMatch> ruleMatchs=jlt.check(text);
 			System.out.println("postion:suggestion");
 			for (RuleMatch match : ruleMatchs) {
+				
 				System.out.println(match.getFromPos()+"-"+match.getToPos()+":"+match.getMessage());
-				//按照替换建议对文本进行纠错
-				sb.replace(match.getFromPos(), match.getToPos(), match.getSuggestedReplacements().get(0));
+				//得到所有建议的替换文本
+				List<String> replacements=match.getSuggestedReplacements();
+				
+				//如果有建议的替换文本则替换 否则不替换
+				if(replacements!=null&&replacements.size()!=0)
+					sb.replace(match.getFromPos(), match.getToPos(), match.getSuggestedReplacements().get(0));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
