@@ -34,7 +34,9 @@ public class Experiment {
 
         //第一个实验文本进行纠错时会进行一些加载耗时
         //导致第一次纠错耗时异常地高 所以预先进行纠错加载
-        TextCheck.class.getClassLoader().loadClass("priv.shen.TextCheck.TextCheck");
+        for (int i=0;i<100;i++){
+            TextCheck.check("test a test.");
+        }
 
         //读入每个实验文本并纠错且得到平均耗时
         while ((text=reader.readLine())!=null){
