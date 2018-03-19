@@ -21,9 +21,9 @@ public class Experiment {
         }
     }
 
-    public static double checkTextAverageTime(int wordNum,int checkTimes) throws Exception{
+    public static double checkTextAverageTime(int wordNum,TextType type,int checkTimes,double exceptionInternal) throws Exception{
         //得到相应长度的实验文本文件的字符输入流
-        BufferedReader reader=new BufferedReader(new InputStreamReader(Experiment.class.getClassLoader().getResourceAsStream(String.valueOf(wordNum))));
+        BufferedReader reader=new BufferedReader(new InputStreamReader(Experiment.class.getClassLoader().getResourceAsStream(String.valueOf(wordNum)+"-"+type.identifier)));
 
         String text=null;
 
@@ -51,8 +51,13 @@ public class Experiment {
                 long begin=System.currentTimeMillis();
                 TextCheck.check(text);
                 long end=System.currentTimeMillis();
-                System.out.println("text-"+textNum+" at the "+(i+1)+"th is "+(double)(end-begin)/1000+"s");
-                totalTime+=end-begin;
+                long interval=end-begin;
+                System.out.println("text-"+textNum+" at the "+(i+1)+"th is "+(double)(interval)/1000+"s");
+                if ((double)interval/1000>exceptionInternal){
+                    checkTimes--;
+                    continue;
+                }
+                totalTime+=interval;
             }
             //在一个实验文本循环纠错结束后 得到平均耗时
             double averageTime=(double) totalTime/(double) checkTimes;

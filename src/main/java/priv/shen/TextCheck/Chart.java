@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chart extends Application {
+public class Chart extends Application{
     private static String stageTitle;
     private static String XLabel;
     private static String YLabel;
@@ -58,13 +58,19 @@ public class Chart extends Application {
     }
 
     public static void main(String[] args) throws Exception {
+        //文本类型 第1 2 3 4种情况
+        TextType type=TextType.ONE_WORD_ONE_LETTER_ERROR;
+
         int[] wordNums=new int[]{3,5,7,9,10};
+
+        System.out.println("文本类型："+type.description);
+
         for (int wordNum:
                 wordNums) {
             System.out.println("------------------------------------------------------------------------");
             System.out.println("check time for "+ wordNum +" words text:");
 
-            double averageTime=Experiment.checkTextAverageTime(wordNum, 100);
+            double averageTime=Experiment.checkTextAverageTime(wordNum, type,200,0.01);
 
             System.out.println("average check time is "+averageTime+" s");
 
@@ -77,7 +83,7 @@ public class Chart extends Application {
         stageTitle="experiment";
         XLabel="单词数量/个";
         YLabel="平均耗时/s";
-        chartTitle="折线图";
+        chartTitle=type.description;
         seriesName="平均耗时";
         launch();
     }
