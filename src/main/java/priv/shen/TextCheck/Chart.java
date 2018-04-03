@@ -58,7 +58,7 @@ public class Chart extends Application{
     }
 
     public static void main(String[] args) throws Exception {
-        //文本类型 第1 2 3 4种情况
+        //文本类型 第1 2 3-2 4种情况
         TextType type=TextType.ONE_WORD_ONE_LETTER_ERROR;
 
         int[] wordNums=new int[]{3,5,7,9,10};

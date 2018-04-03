@@ -24,17 +24,17 @@ public class TextCheck {
 	//得到语言工具对象
 	private static JLanguageTool jlt=new JLanguageTool(language);
 
-	/*static {
+	static {
 		try {
 			String propFiles = "file_properties.xml";//加载JWNL参数文件
 			JWNL.initialize(TextCheck.class.getClassLoader().getResourceAsStream(propFiles));//JWNL初始化
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 
 	public static String check(String text) {
-		/*//将每个单词取出来
+		//将每个单词取出来
 		String[] words=text.split(" ");
 		if (words!=null) {
 			if (!(words[words.length - 1].endsWith("") || words[words.length - 1].endsWith(" "))) {
@@ -54,7 +54,7 @@ public class TextCheck {
 			positions[i]=new Position(begin,end);
 			index=end+2;
 
-		}*/
+		}
 		StringBuilder sb=new StringBuilder(text);
 		try {
 			//根据文本得到在相应规则下的匹配
@@ -70,33 +70,47 @@ public class TextCheck {
 					//得到错误单词的起始位置
 					int fromPos = match.getFromPos();
 					int toPos = match.getToPos();
-/*
-					String wordBefore=null;
-					String wordAfter=null;
-					//找到前面的单词和后面的单词
-					for (int j = 0; j <words.length ; j++) {
-						if (words[j].equals(sb.substring(fromPos,toPos))&&positions[j].begin==fromPos&&(positions[j].end+1)==toPos){
-							if ((j-1>=0))
-								wordBefore=words[j-1];
-							if (j+1<words.length)
-								wordAfter=words[j+1];
-						}
+					int lowestIndex=0;
+
+					//以下是优化部分
+					/*//如果是第一个单词且替换建议是将第一个字母变成大写则直接替换
+					if (fromPos==0&&replacements.get(0).equalsIgnoreCase(sb.substring(fromPos,toPos))){
+						sb=sb.replace(fromPos,toPos,replacements.get(0));
+						break;
 					}
-					//计算错误单词的建议与前后单词的相关度
-					int score1=10,score2=10;*/
-					int lowestScore=10,lowestIndex=0;
-					/*for (int j=0;j<replacements.size();j++) {
+
+					//计算错误单词的建议与其他单词的相关度
+					int totalScore=0;
+					int count=0;
+					double lowestScore=20;
+					for (int j=0;j<replacements.size();j++) {
 						String replacement=replacements.get(j);
-						if (wordBefore!=null)
-							score1=WNA(IWinit(wordBefore),IWinit(replacement));
-						if (wordAfter!=null)
-							score2=WNA(IWinit(wordAfter),IWinit(replacement));
-						int score=(score1+score2)/2;
-						*//*System.out.println(score1+","+score2+","+replacement);*//*
-						if (score<10&&score<lowestScore){
-							lowestScore=score;
+						for (int k=0;k<words.length;k++){
+							//跳过错误单词
+							if (words[k].equals(sb.substring(fromPos,toPos))
+									&&positions[k].begin==fromPos
+									&&(positions[k].end+1)==toPos)
+								continue;
+
+							//计算当前单词与建议单词的相关度
+							int score=WNA(IWinit(replacement),IWinit(words[k]));
+							//相关度为0的单词为词性不同的单词直接抛弃
+							if (score!=0){
+								totalScore+=score;
+								count++;
+							}
+
+						}
+
+
+						//计算平均相关度
+						double averageScore=(double) totalScore/(double) count;
+						if (averageScore<lowestScore){
+							lowestScore=averageScore;
 							lowestIndex=j;
 						}
+
+						System.out.println(replacement+","+averageScore);
 					}*/
 
 					sb = sb.replace(fromPos, toPos, replacements.get(lowestIndex));

@@ -2,8 +2,6 @@ package priv.shen.TextCheck;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ExperimentTest extends Chart{
@@ -22,6 +20,7 @@ public class ExperimentTest extends Chart{
     @Test
     public void test() throws Exception {
         Experiment.checkText(4);
+        /*Experiment.checkText(3);*/
     }
 
     @Test
